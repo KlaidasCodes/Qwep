@@ -58,3 +58,16 @@ def establish_honeypots_and_encrypt(amount_of_pots: int, path_to_json: str):
     print(f"Your password manager will host {amount_of_pots} data pots. Only one of them is going to host your actual passwords - the rest of them will be honeypots" 
         f" with randomly generated information. \nOnce you pick the 'real' data pot, remember which one it is.")
 
+
+
+def add_info_to_json(path_to_json, username, password, site, data_pot):
+    import json
+    with open(path_to_json, "r") as f:
+        the_file = json.load(f)
+    the_file[data_pot]["data"]["ciphertext"][site] = {
+        "username": username,
+        "password": password
+    }
+    with open(path_to_json, "w") as file:
+        json.dump(the_file, file, indent=4)
+    print("Information added successfully. Don't forget to encrypt this though!")

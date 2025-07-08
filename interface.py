@@ -28,7 +28,11 @@ def main():
             # ask the user to provide a secure master-password and then encrypt this specific pot
         # encrypt the rest of the pots with randomly generated keys, no need to store them 
         establish_honeypots_and_encrypt(amount_of_pots, path_to_json)
-
+        print("To set up your account, we will require one initial account information (username and password).")
+        placeholder_or_add = input(f"Would you like to provide a password or to use the default placeholder? (provide/default){new_line}").lower()
+        if placeholder_or_add == "placeholder": 
+            add_info_to_json(path_to_json, "username1", "password1", "www.site1.com", real_pot_name)
+            # throws an error, have to fix
 
 
     else: 

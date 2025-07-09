@@ -84,5 +84,54 @@ def add_info_to_json(path_to_json, username, password, site, data_pot):
         json.dump(the_file, file, indent=4)
     print("Information added successfully. Don't forget to encrypt this though!")
 
+def master_to_key_kdf(master_password, salt_kdf=None, der_key_len=32, hash_algo="sha256", iterations=500000):
+    """Converts a master password into a key, returns key(32b), salt(16b), iterations(int).
+    Only provide master password, the rest of the arguments are defaults."""
+    import secrets
+    import hashlib
+    final_key = ""
+    if not salt_kdf:
+        salt_kdf = secrets.token_bytes(16)
+    master_pw_bytes = master_password.encode("utf-8")
+    derived_key_bytes = hashlib.pbkdf2_hmac(
+        hash_name=hash_algo,
+        password=master_pw_bytes,
+        iterations=iterations,
+        dklen=der_key_len,
+        salt=salt_kdf
+    )
+    return derived_key_bytes, salt_kdf, iterations
 
 
+def encrypt_data(enc_key: bytes, plaintext: bytes):
+    """Takes an input of key and plaintext and encrypts it using AES-GCM
+    Returns encrypted text, authentification tag, nonce."""
+    import secrets
+    from cryptography.hazmat.backends import default_backend
+    from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+    nonce = secrets.token_bytes(12)
+    cipher = Cipher(algorithm=algorithms.AES(enc_key), mode=modes.GCM(nonce), backend=default_backend())
+    encryptor = cipher.encryptor()
+    cipher_text = encryptor.update(plaintext) + encryptor.finalize()
+    tag = encryptor.tag
+    return cipher_text, tag, nonce
+
+def decrypt_data(enc_key, tag, nonce, cipher_text) -> bytes:
+    """Takes encrypted text and decrypts it"""
+    from cryptography.hazmat.backends import default_backend
+    from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+    from cryptography.exceptions import InvalidTag
+    cipher = Cipher(algorithm=algorithms.AES(enc_key), mode=modes.GCM(nonce, tag), backend=default_backend())
+    decryptor = cipher.decryptor()
+    try:
+        plaintext = decryptor.update(cipher_text) + decryptor.finalize()
+        return plaintext
+    except InvalidTag:
+        print("Decryption failed. Something smells fishy here.")
+
+
+def read_json(path_to_json):
+    """Reads json file and returns the contents as dict"""
+    import json
+    with open(path_to_json, "r") as f:
+        return json.load(f)

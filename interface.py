@@ -83,10 +83,10 @@ def main():
         ###############
         # testing if it worked by attempting decryption
         derived_enc_key, salt_kdf, iterations = master_to_key_kdf(master_password, salt_kdf)
-
-
-        plaintext_test = decrypt_data(derived_enc_key, tag, nonce, cipher_text)
-        print(f"Decrypted text: {plaintext_test.decode()}")
+        plaintext_test: bytes = decrypt_data(derived_enc_key, tag, nonce, cipher_text)
+        plaintext_test_dict: dict = json.loads(plaintext_test: bytes)        
+        test_call = plaintext_test_dict["www.site1.com"]
+        print(f"Decrypted text: {test_call}")
         # WORKSSSSSSSSSSSSS
 
     else: 

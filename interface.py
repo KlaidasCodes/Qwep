@@ -3,6 +3,7 @@ import json
 from my_functions import *
 import secrets
 
+# add all the required imports from functions later and remove them from the functions
 # replace the wild card later
 
 def main():
@@ -84,6 +85,11 @@ def main():
         nonce_hex = bytes.hex(nonce)
         upload_to_json(path_to_json, real_pot_name, cipher_text_hex, tag_hex, nonce_hex, bytes.hex(salt_kdf))
 
+
+
+        ####### after user provides the initial default user info, dont upload it - ask for master key, encrypt and only then upload. No need to upload plaintext and then retrieve it again to encrypt it.
+        # will need to adjust the function upload_to_json to take an input of the dictionary instead of opening json itself
+        #  
 
         ###############
         # testing if it worked by attempting decryption

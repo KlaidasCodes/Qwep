@@ -139,6 +139,7 @@ def read_json(path_to_json):
 def upload_to_json(path_to_json: str, real_pot: str, cipher_text: str, tag: str, nonce: str, kdf_salt: str, iterations:int = 500000):
     """Uploads the content to specified json. cipher_text, tag, nonce, kdf_salt IN HEX!"""
     import json
+    # adjust so that instead of retrieving the json, it just takes the input of a dictionary and uses that.
     our_file = read_json(path_to_json)
     shortcut = our_file[real_pot]
     shortcut["data"]["nonce"] = nonce

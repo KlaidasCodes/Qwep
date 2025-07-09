@@ -21,8 +21,8 @@ def create_pw_manager_json():
                     "ciphertext": "",
                     "tag": ""
                 },
-                "salt": "",
-                "iv": ""
+                "kdf_salt": "",
+                "iterations": ""
             }
         with open(f"{new_place}/password_manager.json", "w") as f:            
             # initializes the json file and its format 
@@ -32,7 +32,7 @@ def create_pw_manager_json():
         
 
 
-def establish_honeypots_and_encrypt(amount_of_pots: int, path_to_json: str):
+def initialize_honeypots(amount_of_pots: int, path_to_json: str):
     """Inputs: amount_of_pots: 
     Amount of data pots in the json file
     path_to_json: absolute path to the json file 
@@ -49,9 +49,12 @@ def establish_honeypots_and_encrypt(amount_of_pots: int, path_to_json: str):
         temp_nonce_hex = token_bytes(12).hex()
         temp_tag_hex = token_bytes(16).hex()
         temp_data_hex = token_bytes(100).hex()
+        temp_kdf_salt_hex = token_bytes(16).hex()
         the_file[f"data {i + 1}"]["data"]["nonce"] = temp_nonce_hex
         the_file[f"data {i + 1}"]["data"]["ciphertext"] = temp_data_hex
         the_file[f"data {i + 1}"]["data"]["tag"] = temp_tag_hex
+        the_file[f"data {i + 1}"]["iterations"] = 500000
+        the_file[f"data {i + 1}"]["kdf_salt"] = temp_kdf_salt_hex
     with open(path_to_json, "w") as file:
         json.dump(the_file, file, indent=4)
     print("Placeholder information filled in successfully!\n")
@@ -59,15 +62,27 @@ def establish_honeypots_and_encrypt(amount_of_pots: int, path_to_json: str):
         f" with randomly generated information. \nOnce you pick the 'real' data pot, remember which one it is.")
 
 
+def initialize_ciphertext(path_to_json, data_pot):
+    import json
+    with open(path_to_json, "r") as f:
+        our_file = json.load(f)
+    our_file[data_pot]["data"]["ciphertext"] = {}
+    with open(path_to_json, "w") as file:
+        json.dump(our_file, file, indent=4)
 
 def add_info_to_json(path_to_json, username, password, site, data_pot):
     import json
+    initialize_ciphertext(path_to_json, data_pot)
     with open(path_to_json, "r") as f:
         the_file = json.load(f)
     the_file[data_pot]["data"]["ciphertext"][site] = {
         "username": username,
         "password": password
     }
+                                                                                          
     with open(path_to_json, "w") as file:
         json.dump(the_file, file, indent=4)
     print("Information added successfully. Don't forget to encrypt this though!")
+
+
+

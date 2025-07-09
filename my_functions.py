@@ -135,3 +135,17 @@ def read_json(path_to_json):
     import json
     with open(path_to_json, "r") as f:
         return json.load(f)
+    
+def upload_to_json(path_to_json: str, real_pot: str, cipher_text: str, tag: str, nonce: str, kdf_salt: str, iterations:int = 500000):
+    """Uploads the content to specified json. cipher_text, tag, nonce, kdf_salt IN HEX!"""
+    import json
+    our_file = read_json(path_to_json)
+    shortcut = our_file[real_pot]
+    shortcut["data"]["nonce"] = nonce
+    shortcut["data"]["tag"] = tag
+    shortcut["data"]["ciphertext"] = cipher_text
+    shortcut["kdf_salt"] = kdf_salt
+    shortcut["iterations"] = iterations
+    with open(path_to_json, "w") as f:
+        json.dump(our_file, f, indent=4)
+    print("Uploaded the encrypted text to json successfully!")

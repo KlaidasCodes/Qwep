@@ -79,15 +79,23 @@ def main():
         cipher_text, tag, nonce = encrypt_data(derived_enc_key, text_to_encrypt_bytes)
         print(f"Encrypted text: {cipher_text}\nTag: {tag}\nNonce: {nonce}")
 
+        cipher_text_hex = bytes.hex(cipher_text)
+        tag_hex = bytes.hex(tag)
+        nonce_hex = bytes.hex(nonce)
+        upload_to_json(path_to_json, real_pot_name, cipher_text_hex, tag_hex, nonce_hex, bytes.hex(salt_kdf))
+
 
         ###############
         # testing if it worked by attempting decryption
         derived_enc_key, salt_kdf, iterations = master_to_key_kdf(master_password, salt_kdf)
         plaintext_test: bytes = decrypt_data(derived_enc_key, tag, nonce, cipher_text)
-        plaintext_test_dict: dict = json.loads(plaintext_test: bytes)        
+        plaintext_test_dict: dict = json.loads(plaintext_test)        
         test_call = plaintext_test_dict["www.site1.com"]
         print(f"Decrypted text: {test_call}")
         # WORKSSSSSSSSSSSSS
+
+
+        
 
     else: 
         print("Your input was not recognized.")

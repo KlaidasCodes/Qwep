@@ -116,7 +116,7 @@ def encrypt_data(enc_key: bytes, plaintext: bytes):
     tag = encryptor.tag
     return cipher_text, tag, nonce
 
-def decrypt_data(enc_key, tag, nonce, cipher_text) -> bytes:
+def decrypt_data(enc_key:bytes, tag:bytes, nonce:bytes, cipher_text:bytes) -> bytes:
     """Takes encrypted text and decrypts it"""
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -150,3 +150,23 @@ def upload_to_json(path_to_json: str, real_pot: str, cipher_text: str, tag: str,
     with open(path_to_json, "w") as f:
         json.dump(our_file, f, indent=4)
     print("Uploaded the encrypted text to json successfully!")
+
+
+def authenticate_user(path_to_json, kdf_salt, correct_pot_name, tag, nonce, kmaster_pw=None):
+    import json
+    new_line = "\n\t-"
+    if not master_pw:
+        master_pw = input(f"Please provide your master password:{new_line}")
+    enc_key, kdf_salt, iterations = master_to_key_kdf(master_pw, kdf_salt)
+    our_file: dict = read_json(path_to_json)
+    correct_pot: str = our_file[correct_pot_name]
+    correct_pot_kdf_salt = correct_pot["kdf_salt"]
+    correct_pot_iterations: int = correct_pot["iterations"]
+    correct_pots_data = correct_pot["data"]
+    correct_pots_data_nonce = correct_pot["nonce"]
+    correct_pots_data_tag = correct_pot["tag"]
+    correct_pots_data_ciphertext = correct_pot["ciphertext"]
+
+    plaintext: bytes = decrypt_data(enc_key, correct_pots_data_tag, correct_pots_data_nonce, correct_pots_data_ciphertext)
+    plaintext_dict = json.loads(plaintext)
+    return plaintext_dict

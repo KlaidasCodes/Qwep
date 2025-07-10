@@ -18,6 +18,52 @@ def main():
 
     if new_or_old == "y":
         # doesn't need new acc
+        path_to_json = "/home/curiousad/Documents" #later create something a bit better
+        invalid_dir = True
+        while invalid_dir:
+            location_def_or_prov = input(f"Press ENTER to use default dir, alternatively type in the absolute path to where your json file is stored{new_line}")
+            if location_def_or_prov != "":
+                path_to_json = location_def_or_prov
+            dir_exists = os.path.isdir(path_to_json)
+            if dir_exists:
+                invalid_dir = False
+            else:
+                if location_def_or_prov == "":
+                    print("Default location seems to be missing. Try inputting the path to your json manually.")
+                else:
+                    print("This directory seems to be missing. Make sure your json is named 'password_manager.json' and try again.")    
+        decrypted_passwords = authenticate_user()
+        action_to_do_with_passwords = input(f"What action would you like to perform?{new_line}1) Retrieve a password{new_line}2) Add a password{new_line}3) Correct a password{new_line}4) Read all passwords")
+        # definitely not an if/else here, create a hashmap of number----function!!!
+        # 
+        # 
+        # 
+        #   +                            
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         pass
     elif new_or_old == "n":
         # later package up into just one function new_acc() or something
@@ -91,17 +137,26 @@ def main():
         # will need to adjust the function upload_to_json to take an input of the dictionary instead of opening json itself
         #  
 
+        # Also add honeypot shifting. After each password updating round, offer the choice to the user to switch 
+        # the location of the real pot. Save the encrypted pw on the system (to avoid it being lost from RAM in the process
+        # in case connectivity goes down at some point). THen initialize all the honeypots and overwrite
+        # one of them with real pw info again, just like at the beginning
+
         ###############
         # testing if it worked by attempting decryption
-        derived_enc_key, salt_kdf, iterations = master_to_key_kdf(master_password, salt_kdf)
-        plaintext_test: bytes = decrypt_data(derived_enc_key, tag, nonce, cipher_text)
-        plaintext_test_dict: dict = json.loads(plaintext_test)        
-        test_call = plaintext_test_dict["www.site1.com"]
-        print(f"Decrypted text: {test_call}")
-        # WORKSSSSSSSSSSSSS
+        # derived_enc_key, salt_kdf, iterations = master_to_key_kdf(master_password, salt_kdf)
+        # plaintext_test: bytes = decrypt_data(derived_enc_key, tag, nonce, cipher_text)
+        # plaintext_test_dict: dict = json.loads(plaintext_test)        
+        # test_call = plaintext_test_dict["www.site1.com"]
+        # print(f"Decrypted text: {test_call}")
+        # # WORKSSSSSSSSSSSSS
 
 
         
+
+
+
+
 
     else: 
         print("Your input was not recognized.")

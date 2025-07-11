@@ -32,10 +32,13 @@ def main():
                     print("Default location seems to be missing. Try inputting the path to your json manually.")
                 else:
                     print("This directory seems to be missing. Make sure your json is named 'password_manager.json' and try again.")    
-        decrypted_passwords = authenticate_user()
+        correct_pot_question = input(f"Which pot of data would you like to access?{new_line}")
+        correct_pot_name = f"data {correct_pot_question}"
+        decrypted_passwords = authenticate_user(path_to_json, correct_pot_name) # still filling this..
         action_to_do_with_passwords = input(f"What action would you like to perform?{new_line}1) Retrieve a password{new_line}2) Add a password{new_line}3) Correct a password{new_line}4) Read all passwords")
         # definitely not an if/else here, create a hashmap of number----function!!!
-        # 
+        
+        get_all_passwords(decrypted_passwords)
         # 
         # 
         #   +                            

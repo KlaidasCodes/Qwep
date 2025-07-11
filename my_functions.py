@@ -170,3 +170,8 @@ def authenticate_user(path_to_json, kdf_salt, correct_pot_name, tag, nonce, kmas
     plaintext: bytes = decrypt_data(enc_key, correct_pots_data_tag, correct_pots_data_nonce, correct_pots_data_ciphertext)
     plaintext_dict = json.loads(plaintext)
     return plaintext_dict
+
+
+def get_all_passwords(decrypted_passwords:dict) -> str:
+    for key, value in decrypted_passwords.items():
+        print(f"This is the key: {key}\nThis is the value: {value}\n\n")

@@ -130,7 +130,7 @@ def decrypt_data(enc_key:bytes, tag:bytes, nonce:bytes, cipher_text:bytes) -> by
         print("Decryption failed. Something smells fishy here.")
 
 
-def read_json(path_to_json):
+def read_json(path_to_json) -> dict:
     """Reads json file and returns the contents as dict"""
     import json
     with open(path_to_json, "r") as f:
@@ -152,23 +152,36 @@ def upload_to_json(path_to_json: str, real_pot: str, cipher_text: str, tag: str,
     print("Uploaded the encrypted text to json successfully!")
 
 
-def authenticate_user(path_to_json, kdf_salt, correct_pot_name, tag, nonce, kmaster_pw=None):
+def extract_kdf_salt(correct_pot_data: dict) -> str:
+    return correct_pot_data["kdf_salt"]
+
+
+def extract_nonce_and_tag(correct_pot_data: dict) -> tuple:
+    nonce = correct_pot_data["data"]["nonce"]
+    tag = correct_pot_data["data"]["tag"]
+    return nonce, tag
+
+def extract_ciphertext(correct_pot_data: dict) -> str:
+    return correct_pot_data["data"]["ciphertext"]
+
+
+def authenticate_user(path_to_json, kdf_salt, correct_pot_name, tag, nonce, master_pw=None):
     import json
     new_line = "\n\t-"
     if not master_pw:
         master_pw = input(f"Please provide your master password:{new_line}")
     enc_key, kdf_salt, iterations = master_to_key_kdf(master_pw, kdf_salt)
     our_file: dict = read_json(path_to_json)
-    correct_pot: str = our_file[correct_pot_name]
-    correct_pot_kdf_salt = correct_pot["kdf_salt"]
+    correct_pot: dict = our_file[correct_pot_name]
+    correct_pot_kdf_salt: str = correct_pot["kdf_salt"]
     correct_pot_iterations: int = correct_pot["iterations"]
-    correct_pots_data = correct_pot["data"]
+    correct_pots_data: str = correct_pot["data"]
     correct_pots_data_nonce = correct_pot["nonce"]
     correct_pots_data_tag = correct_pot["tag"]
     correct_pots_data_ciphertext = correct_pot["ciphertext"]
 
     plaintext: bytes = decrypt_data(enc_key, correct_pots_data_tag, correct_pots_data_nonce, correct_pots_data_ciphertext)
-    plaintext_dict = json.loads(plaintext)
+    plaintext_dict = json.loads(plaintext)  # converts bytes to ascii
     return plaintext_dict
 
 

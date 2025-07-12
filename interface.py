@@ -34,6 +34,15 @@ def main():
                     print("This directory seems to be missing. Make sure your json is named 'password_manager.json' and try again.")    
         correct_pot_question = input(f"Which pot of data would you like to access?{new_line}")
         correct_pot_name = f"data {correct_pot_question}"
+        data_from_json: dict = read_json(path_to_json)
+        correct_data_pot: dict = data_from_json[correct_pot_name]
+        correct_pot_kdf_salt: str = extract_kdf_salt(correct_data_pot)
+        correct_nonce, correct_tag = extract_nonce_and_tag(correct_data_pot)
+        correct_ciphertext = extract_ciphertext(correct_data_pot)
+        
+
+
+
         decrypted_passwords = authenticate_user(path_to_json, correct_pot_name) # still filling this..
         action_to_do_with_passwords = input(f"What action would you like to perform?{new_line}1) Retrieve a password{new_line}2) Add a password{new_line}3) Correct a password{new_line}4) Read all passwords")
         # definitely not an if/else here, create a hashmap of number----function!!!
@@ -55,17 +64,6 @@ def main():
 
 
 
-
-
-
-
-
-
-
-
-
-
-# quick tst
 
         pass
     elif new_or_old == "n":

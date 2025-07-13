@@ -89,7 +89,6 @@ def master_to_key_kdf(master_password, salt_kdf=None, der_key_len=32, hash_algo=
     Only provide master password, the rest of the arguments are defaults."""
     import secrets
     import hashlib
-    final_key = ""
     if not salt_kdf:
         salt_kdf = secrets.token_bytes(16)
     master_pw_bytes = master_password.encode("utf-8")
@@ -149,7 +148,7 @@ def upload_to_json(path_to_json: str, real_pot: str, cipher_text: str, tag: str,
     shortcut["kdf_salt"] = kdf_salt
     shortcut["iterations"] = iterations
     with open(path_to_json, "w") as f:
-        json.dump(our_file, f)
+        json.dump(our_file, f, indent=4)
     print("Uploaded the encrypted text to json successfully!")
 
 

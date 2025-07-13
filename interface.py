@@ -6,6 +6,9 @@ import secrets
 # add all the required imports from functions later and remove them from the functions
 # replace the wild card later
 
+# at the end introduce a function that would wipe/overwrite RAM after pw manager closes to remove 
+# plaintext pws from memory
+
 def main():
     new_line = "\n\t-"
     unrecognized_input = True

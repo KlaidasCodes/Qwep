@@ -18,13 +18,13 @@ def main():
 
     if new_or_old == "y":
         # doesn't need new acc
-        path_to_json = "/home/curiousad/Documents" #later create something a bit better
+        path_to_json = "/home/curious_ad/Documents/password_manager.json" #later create something a bit better
         invalid_dir = True
         while invalid_dir:
             location_def_or_prov = input(f"Press ENTER to use default dir, alternatively type in the absolute path to where your json file is stored{new_line}")
             if location_def_or_prov != "":
                 path_to_json = location_def_or_prov
-            dir_exists = os.path.isdir(path_to_json)
+            dir_exists = os.path.isfile(path_to_json)
             if dir_exists:
                 invalid_dir = False
             else:
@@ -37,17 +37,27 @@ def main():
         data_from_json: dict = read_json(path_to_json)
         correct_data_pot: dict = data_from_json[correct_pot_name]
         correct_pot_kdf_salt: str = extract_kdf_salt(correct_data_pot)
+        correct_pot_kdf_salt_bytes: bytes = bytes.fromhex(correct_pot_kdf_salt)
         correct_nonce, correct_tag = extract_nonce_and_tag(correct_data_pot)
+        correct_nonce_bytes: bytes = bytes.fromhex(correct_nonce)
+        correct_tag_bytes: bytes = bytes.fromhex(correct_tag)
         correct_ciphertext = extract_ciphertext(correct_data_pot)
-        
+        correct_ciphertext_bytes: bytes = bytes.fromhex(correct_ciphertext)
+        # now need to decrypt this correct ciphertext
+        master_key = input(f"Please provide the master password:{new_line}")
+        master_key = "snake lobot9my sakal8iukas griaust9nis" # just for testing
+        encryption_key, temp_salt, temp_iter = master_to_key_kdf(master_key, correct_pot_kdf_salt_bytes)
+        plaintext_bytes: bytes = decrypt_data(encryption_key, correct_tag_bytes, correct_nonce_bytes, correct_ciphertext_bytes)
+        # convert bytes to ascii
+        plaintext_ascii: str = plaintext_bytes.decode()
+        print(f"Just testing: {plaintext_ascii}")
 
 
 
-        decrypted_passwords = authenticate_user(path_to_json, correct_pot_name) # still filling this..
+
         action_to_do_with_passwords = input(f"What action would you like to perform?{new_line}1) Retrieve a password{new_line}2) Add a password{new_line}3) Correct a password{new_line}4) Read all passwords")
         # definitely not an if/else here, create a hashmap of number----function!!!
         
-        get_all_passwords(decrypted_passwords)
         # 
         # 
         #   +                            

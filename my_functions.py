@@ -128,6 +128,7 @@ def decrypt_data(enc_key:bytes, tag:bytes, nonce:bytes, cipher_text:bytes) -> by
         return plaintext
     except InvalidTag:
         print("Decryption failed. Something smells fishy here.")
+        
 
 
 def read_json(path_to_json) -> dict:
@@ -148,7 +149,7 @@ def upload_to_json(path_to_json: str, real_pot: str, cipher_text: str, tag: str,
     shortcut["kdf_salt"] = kdf_salt
     shortcut["iterations"] = iterations
     with open(path_to_json, "w") as f:
-        json.dump(our_file, f, indent=4)
+        json.dump(our_file, f)
     print("Uploaded the encrypted text to json successfully!")
 
 

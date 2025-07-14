@@ -48,17 +48,27 @@ def main():
         encryption_key, temp_salt, temp_iter = master_to_key_kdf(master_key, correct_pot_kdf_salt)
         plaintext_bytes: bytes = decrypt_data(encryption_key, correct_tag, correct_nonce, correct_ciphertext)
         # convert bytes to ascii
-        plaintext_ascii: str = plaintext_bytes.decode()
-        print(f"Just testing: {plaintext_ascii}")
+        plaintext_ascii_all_pws: dict = json.loads(plaintext_bytes)
+        print(f"Just testing: {plaintext_ascii_all_pws}")
         # works! 
 
+        user_actions_hash = {
+            "1": lambda: retrieve_one_pw(plaintext_ascii_all_pws),
+            "2": 0,
+            "3": 0,
+            "4": 0
+        } 
 
-
-        action_to_do_with_passwords = input(f"What action would you like to perform?{new_line}1) Retrieve a password{new_line}2) Add a password{new_line}3) Correct a password{new_line}4) Read all passwords")
-        # definitely not an if/else here, create a hashmap of number----function!!!
-        
-        # 
-        # 
+        user_not_done = True
+        while user_not_done:
+            action_to_do_with_passwords = input(f"What action would you like to perform?{new_line}1) Retrieve a password{new_line}2) Add a password{new_line}3) Correct a password{new_line}4) Read all passwords{new_line}")
+            # definitely not an if/else here, create a hashmap of number----function!!!
+            if action_to_do_with_passwords in user_actions_hash:
+                user_actions_hash[action_to_do_with_passwords]()
+            is_user_done_q = input(f"Would you like to perform another action? (y/n){new_line}").lower()
+            if is_user_done_q == "n":
+                user_not_done = False
+                print("Password manager will now apply all the changes made, encrypt the informaiton, wipe the RAM and shut off. Have a good day!")
         #   +                            
 
                 

@@ -1,3 +1,4 @@
+new_line = "\n\t-"
 def create_pw_manager_json():
     """Creates a new json file with the pw manager with a specific number of honeypots.
     Returns path to json | amount of pots"""
@@ -188,6 +189,14 @@ def authenticate_user(path_to_json, kdf_salt, correct_pot_name, tag, nonce, mast
     return plaintext_dict
 
 
-def get_all_passwords(decrypted_passwords:dict) -> str:
-    for key, value in decrypted_passwords.items():
-        print(f"This is the key: {key}\nThis is the value: {value}\n\n")
+
+def retrieve_one_pw(all_passwords):
+    site_to_get = input(f"Enter the site name:{new_line}")
+    if site_to_get in all_passwords:
+        username = all_passwords[site_to_get]["username"]
+        password = all_passwords[site_to_get]["password"]
+        formatted_return = f"{new_line}Site: {site_to_get}{new_line}Username: {username}"\
+        f"{new_line}Password: {password}"
+        print(formatted_return)
+    else:
+        print("Can't find the site. Check the name and try again.")

@@ -39,18 +39,14 @@ def main():
         correct_pot_name = f"data {correct_pot_question}"
         data_from_json: dict = read_json(path_to_json)
         correct_data_pot: dict = data_from_json[correct_pot_name]
-        correct_pot_kdf_salt: str = extract_kdf_salt(correct_data_pot)
-        correct_pot_kdf_salt_bytes: bytes = bytes.fromhex(correct_pot_kdf_salt)
+        correct_pot_kdf_salt: bytes = extract_kdf_salt(correct_data_pot)
         correct_nonce, correct_tag = extract_nonce_and_tag(correct_data_pot)
-        correct_nonce_bytes: bytes = bytes.fromhex(correct_nonce)
-        correct_tag_bytes: bytes = bytes.fromhex(correct_tag)
-        correct_ciphertext = extract_ciphertext(correct_data_pot)
-        correct_ciphertext_bytes: bytes = bytes.fromhex(correct_ciphertext)
+        correct_ciphertext:bytes = extract_ciphertext(correct_data_pot)
         # now need to decrypt this correct ciphertext
         master_key = input(f"Please provide the master password:{new_line}")
         master_key = "snake lobot9my sakal8iukas griaust9nis" # just for testing
-        encryption_key, temp_salt, temp_iter = master_to_key_kdf(master_key, correct_pot_kdf_salt_bytes)
-        plaintext_bytes: bytes = decrypt_data(encryption_key, correct_tag_bytes, correct_nonce_bytes, correct_ciphertext_bytes)
+        encryption_key, temp_salt, temp_iter = master_to_key_kdf(master_key, correct_pot_kdf_salt)
+        plaintext_bytes: bytes = decrypt_data(encryption_key, correct_tag, correct_nonce, correct_ciphertext)
         # convert bytes to ascii
         plaintext_ascii: str = plaintext_bytes.decode()
         print(f"Just testing: {plaintext_ascii}")

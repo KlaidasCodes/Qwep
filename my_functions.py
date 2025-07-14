@@ -152,17 +152,20 @@ def upload_to_json(path_to_json: str, real_pot: str, cipher_text: str, tag: str,
     print("Uploaded the encrypted text to json successfully!")
 
 
-def extract_kdf_salt(correct_pot_data: dict) -> str:
-    return correct_pot_data["kdf_salt"]
+def extract_kdf_salt(correct_pot_data: dict) -> bytes:
+    """extracts hex kdf salt and returns kdf salt bytes"""
+    return bytes.fromhex(correct_pot_data["kdf_salt"])
 
 
-def extract_nonce_and_tag(correct_pot_data: dict) -> tuple:
-    nonce = correct_pot_data["data"]["nonce"]
-    tag = correct_pot_data["data"]["tag"]
+def extract_nonce_and_tag(correct_pot_data: dict) -> tuple[bytes, bytes]:
+    """extracts hex nonce and tag and converts to bytes"""
+    nonce = bytes.fromhex(correct_pot_data["data"]["nonce"])
+    tag = bytes.fromhex(correct_pot_data["data"]["tag"])
     return nonce, tag
 
-def extract_ciphertext(correct_pot_data: dict) -> str:
-    return correct_pot_data["data"]["ciphertext"]
+def extract_ciphertext(correct_pot_data: dict) -> bytes:
+    """extracts hex ciphertext and returns bytes ciphertext"""
+    return bytes.fromhex(correct_pot_data["data"]["ciphertext"])
 
 
 def authenticate_user(path_to_json, kdf_salt, correct_pot_name, tag, nonce, master_pw=None):

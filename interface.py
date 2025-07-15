@@ -54,7 +54,7 @@ def main():
 
         user_actions_hash = {
             "1": lambda: retrieve_one_pw(plaintext_ascii_all_pws),
-            "2": 0,
+            "2": lambda: add_password(plaintext_ascii_all_pws),
             "3": 0,
             "4": 0
         } 
@@ -65,11 +65,11 @@ def main():
             # definitely not an if/else here, create a hashmap of number----function!!!
             if action_to_do_with_passwords in user_actions_hash:
                 user_actions_hash[action_to_do_with_passwords]()
-            is_user_done_q = input(f"Would you like to perform another action? (y/n){new_line}").lower()
-            if is_user_done_q == "n":
+            do_another_action = input(f"Would you like to perform another action? (y/n){new_line}").lower()
+            if do_another_action == "n":
                 user_not_done = False
                 print("Password manager will now apply all the changes made, encrypt the informaiton, wipe the RAM and shut off. Have a good day!")
-        #   +                            
+                # the function of encrypting and uplaoding to json goes here
 
                 
 

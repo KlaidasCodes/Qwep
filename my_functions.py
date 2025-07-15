@@ -200,3 +200,25 @@ def retrieve_one_pw(all_passwords):
         print(formatted_return)
     else:
         print("Can't find the site. Check the name and try again.")
+
+
+def add_password(all_passwords):
+    incorrect_info = True
+    while incorrect_info:    
+        site = input(f"What's the site name?{new_line}")
+        username = input(f"What's the username?{new_line}")
+        password = input(f"What's the password?{new_line}")
+        info_to_add = f"site: {site}\nusername:{username}\npassword: {password}"
+        print(info_to_add)
+        is_info_correct = input(f"Is the inputted information correct? y/n{new_line}").lower()
+        if is_info_correct == "y":
+            all_passwords[site] = {
+                "username": username,
+                "password": password
+            }
+            incorrect_info = False
+
+        print(f"Testing: {all_passwords}")
+    # still need to upload this to json and encrypt. But that could be done at the end of the process, once the 
+    # user confirms that there are no additional requests
+    return all_passwords

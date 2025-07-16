@@ -191,15 +191,19 @@ def authenticate_user(path_to_json, kdf_salt, correct_pot_name, tag, nonce, mast
 
 
 def retrieve_one_pw(all_passwords):
-    site_to_get = input(f"Enter the site name:{new_line}")
-    if site_to_get in all_passwords:
-        username = all_passwords[site_to_get]["username"]
-        password = all_passwords[site_to_get]["password"]
-        formatted_return = f"{new_line}Site: {site_to_get}{new_line}Username: {username}"\
-        f"{new_line}Password: {password}"
-        print(formatted_return)
-    else:
-        print("Can't find the site. Check the name and try again.")
+    incorrect_site = True
+    while incorrect_site:
+        site_to_get = input(f"Enter the site name:{new_line}")
+        if site_to_get in all_passwords:
+            incorrect_site = False
+        else:
+            print("Can't find the site. Check the name and try again.")
+    username = all_passwords[site_to_get]["username"]
+    password = all_passwords[site_to_get]["password"]
+    formatted_return = f"{new_line}Site: {site_to_get}{new_line}Username: {username}"\
+    f"{new_line}Password: {password}"
+    print(formatted_return)
+    return site_to_get
 
 
 def add_password(all_passwords):
@@ -222,3 +226,38 @@ def add_password(all_passwords):
     # still need to upload this to json and encrypt. But that could be done at the end of the process, once the 
     # user confirms that there are no additional requests
     return all_passwords
+
+
+def correct_password(all_passwords):
+    incorrect_info = True
+    value_hash = {
+        "1": "username",
+        "2": "password"
+    }
+    site_to_correct = retrieve_one_pw(all_passwords)
+        
+    dumb_input = True
+    while dumb_input:
+        which_to_correct = input(f"Which one would you like to correct?{new_line}1 - username{new_line}2 - password{new_line}")
+        if which_to_correct == "1" or which_to_correct == "2":
+            dumb_input = False
+        else:
+            print("Pick 1 or 2!")
+    still_incorrect = True
+    while still_incorrect:
+        correct_info = input(f"Please input the corrected information:{new_line}")
+        correct_or_not = input(f"Is this correct? y/n{new_line}{correct_info}{new_line}").lower()
+        if correct_or_not == "y":
+            all_passwords[site_to_correct][value_hash[which_to_correct]] = correct_info 
+            still_incorrect = False
+            print("Info successfully changed!")
+            # STILL REQUIRES TO BE UPLOADED TO JSON THO
+        else:
+            print("Then be careful and type it in again please.")
+
+def get_all_passwords(all_passwords):
+    for index, site in enumerate(all_passwords):
+        username = all_passwords[site]["username"]
+        password = all_passwords[site]["password"]
+        formatted_info = f"{new_line}Site: {site}{new_line}Username: {username}{new_line}Password: {password}"
+        print(f"{index + 1} --------------v---------------v------------------v {formatted_info}")

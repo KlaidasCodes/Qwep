@@ -55,8 +55,8 @@ def main():
         user_actions_hash = {
             "1": lambda: retrieve_one_pw(plaintext_ascii_all_pws),
             "2": lambda: add_password(plaintext_ascii_all_pws),
-            "3": 0,
-            "4": 0
+            "3": lambda: correct_password(plaintext_ascii_all_pws),
+            "4": lambda: get_all_passwords(plaintext_ascii_all_pws)
         } 
 
         user_not_done = True
@@ -65,6 +65,8 @@ def main():
             # definitely not an if/else here, create a hashmap of number----function!!!
             if action_to_do_with_passwords in user_actions_hash:
                 user_actions_hash[action_to_do_with_passwords]()
+            else:
+                print("Invalid input. Make sure the number you inputted is an option in the menu!")
             do_another_action = input(f"Would you like to perform another action? (y/n){new_line}").lower()
             if do_another_action == "n":
                 user_not_done = False
@@ -72,8 +74,14 @@ def main():
                 # the function of encrypting and uplaoding to json goes here
 
                 
-
-
+        # Now need to make the logic of updating the json (and the honeypots!!!) and it will fully function
+        #TODO-1: encrypt plaintext_ascii_all_pws
+        #TODO-2: transform from bytes to hex
+        #TODO-3: check the length in bytes of the ciphertext
+        #TODO-4: regenerate an entire honeypot structure with their ciphertexts at the length above
+        #TODO-5: get the user to pick their "real pot" again
+        #TODO-6: overwrite that pot's info 
+        #TODO-7: dump that to the json file
 
 
 

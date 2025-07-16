@@ -61,6 +61,7 @@ def main():
 
         user_not_done = True
         while user_not_done:
+            # add 5-removing a password
             action_to_do_with_passwords = input(f"What action would you like to perform?{new_line}1) Retrieve a password{new_line}2) Add a password{new_line}3) Correct a password{new_line}4) Read all passwords{new_line}")
             # definitely not an if/else here, create a hashmap of number----function!!!
             if action_to_do_with_passwords in user_actions_hash:
@@ -76,8 +77,16 @@ def main():
                 
         # Now need to make the logic of updating the json (and the honeypots!!!) and it will fully function
         #TODO-1: encrypt plaintext_ascii_all_pws
-        #TODO-2: transform from bytes to hex
+        passwords_in_bytes: bytes = json.dumps(plaintext_ascii_all_pws).encode("utf-8")
+        new_ciphertext, new_tag, new_nonce  = encrypt_data(encryption_key, passwords_in_bytes)
+        #TODO-2: transform from bytes to hex)
+        new_ciphertext_hex = bytes.hex(new_ciphertext)
+        new_tag_hex = bytes.hex(new_tag)
+        new_nonce_hex = bytes.hex(new_nonce)
         #TODO-3: check the length in bytes of the ciphertext
+        ciphertext_bytes_len = len(new_ciphertext)
+        print(f"This is the ciphertext in bytes: {new_ciphertext}")
+        print(f"This is the length in bytes: {ciphertext_bytes_len}")
         #TODO-4: regenerate an entire honeypot structure with their ciphertexts at the length above
         #TODO-5: get the user to pick their "real pot" again
         #TODO-6: overwrite that pot's info 

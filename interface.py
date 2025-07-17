@@ -8,6 +8,9 @@ import secrets
 
 # at the end introduce a function that would wipe/overwrite RAM after pw manager closes to remove 
 # plaintext pws from memory
+
+# Add optional compatibility with yubikeys for MFA! (and the boring stuff like ms auth and others)
+
 real_pot_name = ""
 def main():
     new_line = "\n\t-"

@@ -261,3 +261,10 @@ def get_all_passwords(all_passwords):
         password = all_passwords[site]["password"]
         formatted_info = f"{new_line}Site: {site}{new_line}Username: {username}{new_line}Password: {password}"
         print(f"{index + 1} --------------v---------------v------------------v {formatted_info}")
+
+
+
+def change_real_pot(real_pot_name):
+    real_pot_no = input(f"Which pot would you like to be your real one?{new_line}")
+    real_pot_name = f"data {real_pot_no}"
+    

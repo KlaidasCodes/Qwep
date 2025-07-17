@@ -8,7 +8,7 @@ import secrets
 
 # at the end introduce a function that would wipe/overwrite RAM after pw manager closes to remove 
 # plaintext pws from memory
-
+real_pot_name = ""
 def main():
     new_line = "\n\t-"
     unrecognized_input = True
@@ -37,6 +37,7 @@ def main():
                     print("This directory seems to be missing. Make sure your json is named 'password_manager.json' and try again.")    
         correct_pot_question = input(f"Which pot of data would you like to access?{new_line}")
         correct_pot_name = f"data {correct_pot_question}"
+        real_pot_name = correct_pot_name
         data_from_json: dict = read_json(path_to_json)
         correct_data_pot: dict = data_from_json[correct_pot_name]
         correct_pot_kdf_salt: bytes = extract_kdf_salt(correct_data_pot)
@@ -56,7 +57,8 @@ def main():
             "1": lambda: retrieve_one_pw(plaintext_ascii_all_pws),
             "2": lambda: add_password(plaintext_ascii_all_pws),
             "3": lambda: correct_password(plaintext_ascii_all_pws),
-            "4": lambda: get_all_passwords(plaintext_ascii_all_pws)
+            "4": lambda: get_all_passwords(plaintext_ascii_all_pws),
+            "5": lambda: change_real_pot(real_pot_name)
         } 
 
         user_not_done = True
@@ -100,7 +102,7 @@ def main():
         # to passwords.
 
         # OR JUST INTRODUCE AN OPTION OF CHANGING WHERE THE REAL POT IS AND WHERE THE DECOY IS, JUST ADD THAT TO THE 
-        # MENU OF FUNCTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+        # MENU OF FUNCTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 

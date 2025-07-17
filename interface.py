@@ -70,7 +70,10 @@ def main():
             action_to_do_with_passwords = input(f"What action would you like to perform?{new_line}1) Retrieve a password{new_line}2) Add a password{new_line}3) Correct a password{new_line}4) Read all passwords{new_line}")
             # definitely not an if/else here, create a hashmap of number----function!!!
             if action_to_do_with_passwords in user_actions_hash:
-                user_actions_hash[action_to_do_with_passwords]()
+                if action_to_do_with_passwords == "5":
+                    real_pot_name = user_actions_hash["5"]()
+                else:                    
+                    user_actions_hash[action_to_do_with_passwords]()
             else:
                 print("Invalid input. Make sure the number you inputted is an option in the menu!")
             do_another_action = input(f"Would you like to perform another action? (y/n){new_line}").lower()
@@ -78,6 +81,9 @@ def main():
                 user_not_done = False
                 print("Password manager will now apply all the changes made, encrypt the informaiton, wipe the RAM and shut off. Have a good day!")
                 # the function of encrypting and uplaoding to json goes here
+
+
+
 
                 
         # Now need to make the logic of updating the json (and the honeypots!!!) and it will fully function
@@ -93,8 +99,16 @@ def main():
         print(f"This is the ciphertext in bytes: {new_ciphertext}")
         print(f"This is the length in bytes: {ciphertext_bytes_len}")
         #TODO-4: Update the file that we have taken from json by replacing all pots with that length honepots
+
         #TODO-5: upload the ciphertext to the same real pot (offer the option of changing the real pot)
+                # the var we need is called data_from_json
+        data_from_json[correct_pot_name]["data"]["ciphertext"] = new_ciphertext_hex
+        data_from_json[correct_pot_name]["data"]["tag"] = new_tag_hex
+        data_from_json[correct_pot_name]["data"]["nonce"] = new_nonce_hex
         #TODO-6: update the other info (salts and stuff)
+        # the salt and iterations stay the same, right? should think this through
+
+
         #TODO-7: dump that to the json file
         #TODO-9: clean RAM?
 

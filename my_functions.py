@@ -132,7 +132,7 @@ def decrypt_data(enc_key:bytes, tag:bytes, nonce:bytes, cipher_text:bytes) -> by
 
 
 def read_json(path_to_json) -> dict:
-    """Reads json file and returns the contents as dict"""
+    """Reads json file and returns the contents as dict (hex)"""
     import json
     with open(path_to_json, "r") as f:
         return json.load(f)
@@ -267,4 +267,5 @@ def get_all_passwords(all_passwords):
 def change_real_pot(real_pot_name):
     real_pot_no = input(f"Which pot would you like to be your real one?{new_line}")
     real_pot_name = f"data {real_pot_no}"
+    return real_pot_name
     

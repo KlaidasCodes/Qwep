@@ -87,10 +87,20 @@ def main():
         ciphertext_bytes_len = len(new_ciphertext)
         print(f"This is the ciphertext in bytes: {new_ciphertext}")
         print(f"This is the length in bytes: {ciphertext_bytes_len}")
-        #TODO-4: regenerate an entire honeypot structure with their ciphertexts at the length above
-        #TODO-5: get the user to pick their "real pot" again
-        #TODO-6: overwrite that pot's info 
+        #TODO-4: Update the file that we have taken from json by replacing all pots with that length honepots
+        #TODO-5: upload the ciphertext to the same real pot (offer the option of changing the real pot)
+        #TODO-6: update the other info (salts and stuff)
         #TODO-7: dump that to the json file
+        #TODO-9: clean RAM?
+
+        # at some point need to address the logic of having a decoy password pot, to make sure it does not 
+        # get overwritten by honeypots. Or to always have it in the same place (but then the open source code
+        # would make it too obvious for authorities to expect decoy passwords in a specific pot). SO perhaps
+        # a user could pick at the beginning and then keep  it there? Or keep picking every time they make changes 
+        # to passwords.
+
+        # OR JUST INTRODUCE AN OPTION OF CHANGING WHERE THE REAL POT IS AND WHERE THE DECOY IS, JUST ADD THAT TO THE 
+        # MENU OF FUNCTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 
 
 

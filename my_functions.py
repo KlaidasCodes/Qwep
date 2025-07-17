@@ -269,3 +269,19 @@ def change_real_pot(real_pot_name):
     real_pot_name = f"data {real_pot_no}"
     return real_pot_name
     
+
+def update_lengths_of_honeypots(data_from_json: dict, real_pot_name: str, length_of_ciphertext: int):
+    """updates the ciphertext length of honeypots to the same length as the real ciphertext"""
+    import secrets
+    for pot in data_from_json:
+        if pot != real_pot_name:
+            temp_cipher: str = bytes.hex(secrets.token_bytes(length_of_ciphertext))
+            data_from_json[pot]["data"]["ciphertext"] = temp_cipher
+    return data_from_json
+
+
+def update_json(new_json_data, path_to_json):
+    import json
+    with open(path_to_json, "w") as f:
+        json.dump(new_json_data, f, indent=4)
+        print("The password manager has been updated successfully. Time to wipe RAM.")

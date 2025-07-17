@@ -81,6 +81,7 @@ def main():
                 user_not_done = False
                 print("Password manager will now apply all the changes made, encrypt the informaiton, wipe the RAM and shut off. Have a good day!")
                 # the function of encrypting and uplaoding to json goes here
+            # add some error message if response is not y or n, for now it just forces you to do another action in that case 
 
 
 
@@ -89,15 +90,17 @@ def main():
         # Now need to make the logic of updating the json (and the honeypots!!!) and it will fully function
         #TODO-1: encrypt plaintext_ascii_all_pws
         passwords_in_bytes: bytes = json.dumps(plaintext_ascii_all_pws).encode("utf-8")
-        new_ciphertext, new_tag, new_nonce  = encrypt_data(encryption_key, passwords_in_bytes)
+        new_enc_key, new_kdf_salt, iterations = master_to_key_kdf(master_key)
+        new_ciphertext, new_tag, new_nonce  = encrypt_data(new_enc_key, passwords_in_bytes)
         #TODO-2: transform from bytes to hex)
         new_ciphertext_hex = bytes.hex(new_ciphertext)
         new_tag_hex = bytes.hex(new_tag)
         new_nonce_hex = bytes.hex(new_nonce)
+        new_kdf_salt_hex = bytes.hex(new_kdf_salt)
         #TODO-3: check the length in bytes of the ciphertext
         ciphertext_bytes_len = len(new_ciphertext)
-        print(f"This is the ciphertext in bytes: {new_ciphertext}")
-        print(f"This is the length in bytes: {ciphertext_bytes_len}")
+        # print(f"This is the ciphertext in bytes: {new_ciphertext}")
+        # print(f"This is the length in bytes: {ciphertext_bytes_len}")
         #TODO-4: Update the file that we have taken from json by replacing all pots with that length honepots
 
         #TODO-5: upload the ciphertext to the same real pot (offer the option of changing the real pot)
@@ -107,9 +110,15 @@ def main():
         data_from_json[correct_pot_name]["data"]["nonce"] = new_nonce_hex
         #TODO-6: update the other info (salts and stuff)
         # the salt and iterations stay the same, right? should think this through
-
-
+        # the salt must change. We upload the salt that we used to encrypt the new ciphertext this time, it came out of the
+        # kdf function. 
+        # !!!!!!!!!!!!!!!!!!!!!! So implementation was incorrect - i reused the KDF derived from the master key, which introduces
+        # a vulnerability. Need to run kdf again, derive another enc key with a new salt.
+        data_from_json[correct_pot_name]["kdf_salt"] = new_kdf_salt_hex
+        ready_data_for_json: dict = update_lengths_of_honeypots(data_from_json, real_pot_name, ciphertext_bytes_len)
+        # print(ready_data_for_json)
         #TODO-7: dump that to the json file
+        update_json(ready_data_for_json, path_to_json)
         #TODO-9: clean RAM?
 
         # at some point need to address the logic of having a decoy password pot, to make sure it does not 

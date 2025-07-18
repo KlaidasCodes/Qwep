@@ -51,11 +51,12 @@ def initialize_honeypots(amount_of_pots: int, path_to_json: str):
         temp_tag_hex = token_bytes(16).hex()
         temp_data_hex = token_bytes(100).hex()
         temp_kdf_salt_hex = token_bytes(16).hex()
-        the_file[f"data {i + 1}"]["data"]["nonce"] = temp_nonce_hex
-        the_file[f"data {i + 1}"]["data"]["ciphertext"] = temp_data_hex
-        the_file[f"data {i + 1}"]["data"]["tag"] = temp_tag_hex
-        the_file[f"data {i + 1}"]["iterations"] = 500000
-        the_file[f"data {i + 1}"]["kdf_salt"] = temp_kdf_salt_hex
+        needed_pot = the_file[f"data {i + 1}"]
+        needed_pot["data"]["nonce"] = temp_nonce_hex
+        needed_pot["data"]["ciphertext"] = temp_data_hex
+        needed_pot["data"]["tag"] = temp_tag_hex
+        needed_pot["iterations"] = 500000
+        needed_pot["kdf_salt"] = temp_kdf_salt_hex
     with open(path_to_json, "w") as file:
         json.dump(the_file, file, indent=4)
     print("Placeholder information filled in successfully!\n")

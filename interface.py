@@ -2,7 +2,7 @@ import os
 import json
 from my_functions import *
 import secrets
-
+# terrible thing to do but just adding this comment today cause i dont wanna lose the green squares, sue me
 # add all the required imports from functions later and remove them from the functions
 # replace the wild card later
 
@@ -70,10 +70,7 @@ def main():
             action_to_do_with_passwords = input(f"What action would you like to perform?{new_line}1) Retrieve a password{new_line}2) Add a password{new_line}3) Correct a password{new_line}4) Read all passwords{new_line}")
             # definitely not an if/else here, create a hashmap of number----function!!!
             if action_to_do_with_passwords in user_actions_hash:
-                if action_to_do_with_passwords == "5":
-                    real_pot_name = user_actions_hash["5"]()
-                else:                    
-                    user_actions_hash[action_to_do_with_passwords]()
+                user_actions_hash[action_to_do_with_passwords]()
             else:
                 print("Invalid input. Make sure the number you inputted is an option in the menu!")
             do_another_action = input(f"Would you like to perform another action? (y/n){new_line}").lower()
@@ -81,44 +78,24 @@ def main():
                 user_not_done = False
                 print("Password manager will now apply all the changes made, encrypt the informaiton, wipe the RAM and shut off. Have a good day!")
                 # the function of encrypting and uplaoding to json goes here
-            # add some error message if response is not y or n, for now it just forces you to do another action in that case 
-
-
-
 
                 
         # Now need to make the logic of updating the json (and the honeypots!!!) and it will fully function
         #TODO-1: encrypt plaintext_ascii_all_pws
         passwords_in_bytes: bytes = json.dumps(plaintext_ascii_all_pws).encode("utf-8")
-        new_enc_key, new_kdf_salt, iterations = master_to_key_kdf(master_key)
-        new_ciphertext, new_tag, new_nonce  = encrypt_data(new_enc_key, passwords_in_bytes)
+        new_ciphertext, new_tag, new_nonce  = encrypt_data(encryption_key, passwords_in_bytes)
         #TODO-2: transform from bytes to hex)
         new_ciphertext_hex = bytes.hex(new_ciphertext)
         new_tag_hex = bytes.hex(new_tag)
         new_nonce_hex = bytes.hex(new_nonce)
-        new_kdf_salt_hex = bytes.hex(new_kdf_salt)
         #TODO-3: check the length in bytes of the ciphertext
         ciphertext_bytes_len = len(new_ciphertext)
-        # print(f"This is the ciphertext in bytes: {new_ciphertext}")
-        # print(f"This is the length in bytes: {ciphertext_bytes_len}")
+        print(f"This is the ciphertext in bytes: {new_ciphertext}")
+        print(f"This is the length in bytes: {ciphertext_bytes_len}")
         #TODO-4: Update the file that we have taken from json by replacing all pots with that length honepots
-
         #TODO-5: upload the ciphertext to the same real pot (offer the option of changing the real pot)
-                # the var we need is called data_from_json
-        data_from_json[correct_pot_name]["data"]["ciphertext"] = new_ciphertext_hex
-        data_from_json[correct_pot_name]["data"]["tag"] = new_tag_hex
-        data_from_json[correct_pot_name]["data"]["nonce"] = new_nonce_hex
         #TODO-6: update the other info (salts and stuff)
-        # the salt and iterations stay the same, right? should think this through
-        # the salt must change. We upload the salt that we used to encrypt the new ciphertext this time, it came out of the
-        # kdf function. 
-        # !!!!!!!!!!!!!!!!!!!!!! So implementation was incorrect - i reused the KDF derived from the master key, which introduces
-        # a vulnerability. Need to run kdf again, derive another enc key with a new salt.
-        data_from_json[correct_pot_name]["kdf_salt"] = new_kdf_salt_hex
-        ready_data_for_json: dict = update_lengths_of_honeypots(data_from_json, real_pot_name, ciphertext_bytes_len)
-        # print(ready_data_for_json)
         #TODO-7: dump that to the json file
-        update_json(ready_data_for_json, path_to_json)
         #TODO-9: clean RAM?
 
         # at some point need to address the logic of having a decoy password pot, to make sure it does not 
